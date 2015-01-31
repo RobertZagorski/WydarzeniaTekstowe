@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="grid_button">
+
+        <!--
+    <item name="android:layout_width" ></item>
+    <item name="android:layout_height" ></item>
+        -->
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">left|top</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">@style/ButtonBar</item>
+        <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
+    </style>
+
+    <style name="ButtonBar">
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:background">@android:drawable/bottom_bar</item>
+    </style>
+
+    <style name="ButtonBarButton" />
+    
+    <!-- <style name="AppTheme" parent="@android:style/Theme"/> -->
+
+    <style name="ContactListView">
+        <item name="android:verticalScrollbarPosition">right</item>
+        <item name="android:fastScrollAlwaysVisible">true</item>
+        <item name="android:scrollbarStyle">outsideInset</item>
+    </style>
+
+    <style name="listViewActivatedStyle"/>
+
+
+    <style name="searchTextHiglight">
+        <item name="android:textColor">@color/bright_red</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="addressHeader" parent="@android:style/TextAppearance.Small">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="addressDetail" parent="@android:style/TextAppearance.Medium">
+        <!-- <item name="android:fontFamily">sans-serif-light</item>-->
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="contactNameTitle" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">38sp</item>
+        <!-- <item name="android:fontFamily">sans-serif</item>-->
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="addressButton"/>
+
+</resources>
