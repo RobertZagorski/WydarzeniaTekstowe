@@ -20,10 +20,10 @@ import android.util.Log;
 public class ReadWriteJSON {
 	
 	ReadWriteJSON rwJSON;
-	public String[] layoutElements = {	"EventName",
+	public String[] layoutElements = {	"Event",
 			  							"Date",
 			  							"Hour",
-			  							"Include",
+			  							"Message",
 			  							"Person",
 			  							"Point",
 			  							"WhenToSend"};

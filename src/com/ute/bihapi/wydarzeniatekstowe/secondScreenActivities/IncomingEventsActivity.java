@@ -2,40 +2,46 @@ package com.ute.bihapi.wydarzeniatekstowe.secondScreenActivities;
 
 import java.util.ArrayList;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.ute.bihapi.wydarzeniatekstowe.R;
-import com.ute.bihapi.wydarzeniatekstowe.R.id;
-import com.ute.bihapi.wydarzeniatekstowe.R.layout;
-import com.ute.bihapi.wydarzeniatekstowe.R.menu;
 import com.ute.bihapi.wydarzeniatekstowe.thirdScreenActivities.MapActivity;
+import com.ute.bihapi.wydarzeniatekstowe.thirdScreenActivities.util.Place;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class IncomingEventsActivity extends Activity implements OnItemClickListener {
 	Bundle[] bundle;
-	ArrayAdapter<String> adapter;
+	ArrayAdapter<Events> adapter;
 	ListView list;
-	ArrayList<String> array;
-	public String[] layoutElements = {"EventName","Date","Hour","Include","Person","Point","WhenToSend"};
+	ArrayList<Events> array;
+	ArrayList<String> details;
+	public String[] layoutElements = {"Event","Date","Hour","Message","Person","Point","WhenToSend"};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		/*Bundle bu = new Bundle();
-		bu.putString("eventName","sth" );
+		bu.putString("Event","sth" );
 		bu.putString("date","sth" );
 		bu.putString("hour","sth" );
 		bu.putString("message","sth" );
@@ -48,13 +54,38 @@ public class IncomingEventsActivity extends Activity implements OnItemClickListe
 		{
 			bundle = ReadWriteJSON.get().getBundleFromJSON(ReadWriteJSON.get().readFromFile(this));
 			Log.i("Events bundle",bundle.toString());
-			list = (ListView) findViewById(R.id.ie_list);
-			array = new ArrayList<String>();
+			array = new ArrayList<Events>();
 			for (Bundle bund : bundle)
 			{
-				array.add(bund.get("EventName").toString());
+				array.add(new Events(bund.get("Event").toString(),
+						bund.get("Hour").toString()+" "+bund.get("Date").toString()));	
 			}
-			adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, array);
+			adapter = new ArrayAdapter<Events>(this, R.layout.eventlist, array)
+				{
+					@Override
+				    public View getView(int rowIndex, View convertView, ViewGroup parent) {
+				        View row = convertView;
+				        if(null == row) {
+				            LayoutInflater layout = (LayoutInflater)getSystemService(
+				                    Context.LAYOUT_INFLATER_SERVICE
+				            );
+				            row = layout.inflate(R.layout.eventlist, null);
+				        }
+				        Events oneEvent = array.get(rowIndex);
+				        if(null != oneEvent) {
+				            TextView name = (TextView) row.findViewById(R.id.ie_list_name);
+				            TextView vicinity = (TextView) row.findViewById(R.id.ie_list_vicinity);
+				            if(null != name) {
+				                name.setText(oneEvent.Event);
+				            }
+				            if(null != vicinity) {
+				                vicinity.setText(oneEvent.Date);
+				            }
+				        }
+				        return row;
+				    }
+				};
+			list = (ListView) findViewById(R.id.ie_list);
 			list.setAdapter(adapter);
 			list.setOnItemClickListener(this);
 		}
@@ -84,10 +115,10 @@ public class IncomingEventsActivity extends Activity implements OnItemClickListe
 			long id) {
 		if (list != null)
 		{
-			String eventName = array.get(position);
+			String Event = array.get(position).Event;
 			for (Bundle bund : bundle)
 			{
-				if (bund.get("EventName").toString().equals(eventName))
+				if (bund.get("Event").toString().equals(Event))
 				{
 			        String details = "";
 			        Bundle mp = null;
@@ -99,13 +130,13 @@ public class IncomingEventsActivity extends Activity implements OnItemClickListe
 					    	{
 					    		mp = bund.getBundle("Person");
 					    		Log.i("IncomingEventsActivity:102", "Show details: "+ mp.keySet().toArray()[0].toString() + " "+mp.get(mp.keySet().toArray()[0].toString()).toString());
-					    		details +="Person: " + mp.keySet().toArray()[0].toString() + " " + mp.get(mp.keySet().toArray()[0].toString()).toString() + "\n";
+					    		details +="Person: " + mp.keySet().toArray()[0].toString() + " - " + mp.get(mp.keySet().toArray()[0].toString()).toString() + "\n";
 					    	}
 			    			else if (layoutElement.equals("Point"))
 					    	{
 					    		mp = bund.getBundle("Point");
 					    		Log.i("IncomingEventsActivity:108", "Show details: "+ mp.keySet().toArray()[0].toString() + " "+mp.get(mp.keySet().toArray()[0].toString()).toString());
-					    		details +="Place: "+ mp.keySet().toArray()[0].toString() + " " + mp.get(mp.keySet().toArray()[0].toString()).toString() + "\n";
+					    		details +="Place: "+ mp.get(mp.keySet().toArray()[0].toString()).toString() + "\n";
 					    	}
 			    			else
 			    			{
@@ -133,7 +164,8 @@ public class IncomingEventsActivity extends Activity implements OnItemClickListe
 			                     }*/
 			               }
 			        };
-			        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			        AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_DARK);
+			        builder.setTitle("Event details");
 			        builder.setMessage(details)
 			                     .setPositiveButton("Ok", dialogClickListener)
 			                     /*.setNegativeButton("Once again", dialogClickListener)*/.show();

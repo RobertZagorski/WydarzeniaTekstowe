@@ -45,7 +45,7 @@ public class ContactsListActivity extends FragmentActivity implements
     private boolean isSearchResultView = false;
     
     Bundle memory;
-    public String[] layoutElements = {"EventName","Date","Hour","Include","Person","Point","WhenToSend"};
+    public String[] layoutElements = {"Event","Date","Hour","Message","Person","Point","WhenToSend"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

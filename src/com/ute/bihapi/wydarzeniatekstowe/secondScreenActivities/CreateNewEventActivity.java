@@ -1,6 +1,5 @@
 package com.ute.bihapi.wydarzeniatekstowe.secondScreenActivities;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +7,7 @@ import java.util.Map;
 import com.google.android.gms.maps.model.LatLng;
 import com.ute.bihapi.wydarzeniatekstowe.R;
 import com.ute.bihapi.wydarzeniatekstowe.sendapis.SendSMS;
+import com.ute.bihapi.wydarzeniatekstowe.sendapis.SendUSSD;
 import com.ute.bihapi.wydarzeniatekstowe.thirdScreenActivities.ContactsListActivity;
 import com.ute.bihapi.wydarzeniatekstowe.thirdScreenActivities.MapActivity;
 
@@ -34,29 +34,33 @@ public class CreateNewEventActivity extends Activity implements OnClickListener 
 	private LatLng mapPoint;
 	Boolean BIHAPI;
 	HashMap<String, TextView> layoutElements;
-	
+	private String place;
+	private static Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		CreateNewEventActivity.context = getApplicationContext();
 		setContentView(R.layout.activity_create_new_event);
 		this.findViewById(R.id.cne_includebutton).setOnClickListener(this);
 		this.findViewById(R.id.cne_button_place).setOnClickListener(this);
 		this.findViewById(R.id.cne_checkBox).setOnClickListener(this);
 		this.findViewById(R.id.cne_sendbutton).setOnClickListener(this);
-		Boolean BIHAPI = true;
+		((CheckBox)this.findViewById(R.id.cne_checkBoxSMS)).setChecked(true);
+		BIHAPI = true;
 		final String[] regex = {"\\d{2}\\-\\d{2}\\-\\d{4}",
 		                        "\\d{2}\\:\\d{2}",
 		                        "\\d{2}\\:\\d{2}"};  
 
 		layoutElements = new HashMap<String, TextView>();
-		layoutElements.put("EventName", (EditText) findViewById(R.id.cne_edit1));
+		layoutElements.put("Event", (EditText) findViewById(R.id.cne_edit1));
 		layoutElements.put("Date", (EditText) findViewById(R.id.cne_edit2));
 		layoutElements.put("Hour", (EditText) findViewById(R.id.cne_edit3));
-		layoutElements.put("Include", (EditText) findViewById(R.id.cne_edit4));
+		layoutElements.put("Message", (EditText) findViewById(R.id.cne_edit4));
 		layoutElements.put("Person", (MultiAutoCompleteTextView) findViewById(R.id.cne_edit5));
 		layoutElements.put("WhenToSend", (EditText) findViewById(R.id.cne_edit6));
 		layoutElements.put("Point", (TextView) findViewById(R.id.cne_text7));
+		layoutElements.put("PointName", (TextView) findViewById(R.id.cne_text7));
 		
 		
 		ArrayList<EditText> editFields = new ArrayList<EditText>();
@@ -130,7 +134,7 @@ public class CreateNewEventActivity extends Activity implements OnClickListener 
 		    	
 		    	for (Map.Entry<String, TextView> entry : layoutElements.entrySet())
 	    		{
-		    		if (extras.containsKey(entry.getKey()) /*&& extras.getString(entry.getKey()) != null /*&& extras.getString("EventName").length() > 0*/)
+		    		if (extras.containsKey(entry.getKey()) /*&& extras.getString(entry.getKey()) != null /*&& extras.getString("Event").length() > 0*/)
 			    	{
 		    			if (entry.getKey().equals("Person"))
 		    			{
@@ -140,11 +144,15 @@ public class CreateNewEventActivity extends Activity implements OnClickListener 
 		    			}
 		    			else if (entry.getKey().equals("Point"))
 		    			{
-		    				this.mapPoint = (LatLng) extras.get("Point");
-				    		Log.i("Memory", "Got entry from prevoius activity: Point: "+extras.get("Point").toString() );
-				    		entry.getValue().setText( "(" + String.format( "%.3f", mapPoint.latitude ) 
-																			  + ";" + String.format( "%.3f", mapPoint.longitude ) + ")" );
+		    				this.mapPoint = (LatLng) (extras.get("Point"));
+				    		Log.i("Memory", "Got entry from prevoius activity: Point: "+extras.get("Point").toString());
+				    		entry.getValue().append( "(" + String.format( "%.3f", mapPoint.latitude ) + ";" + String.format( "%.3f", mapPoint.longitude ) + ")\n" );
 		    			}
+		    			else if (entry.getKey().equals("PointName"))
+				    	{
+		    				this.place = extras.getString( entry.getKey() );
+		    				entry.getValue().append(place+"\n");
+				    	}
 		    			else
 		    			{
 		    				Log.i("Memory", "Got entry from prevoius activity: " + entry.getKey() + ": " + extras.get(entry.getKey()).toString() );
@@ -265,8 +273,13 @@ public class CreateNewEventActivity extends Activity implements OnClickListener 
 				else if (entry.getKey().equalsIgnoreCase("Point"))
 				{
 					Bundle bund = new Bundle();
-	    			bund.putString("Point","(" + String.format( "%.3f", mapPoint.latitude ) + ";" + String.format( "%.3f", mapPoint.longitude ) + ")" );
+	    			bund.putString("Point",place+" (" + String.format( "%.3f", mapPoint.latitude ) 
+							  + ";" + String.format( "%.3f", mapPoint.longitude ) + ")" );
 	    			bundle.putBundle("Point", bund);
+				}
+				else if (entry.getKey().equalsIgnoreCase("PointName"))
+				{
+					
 				}
 				else
 				{
@@ -280,7 +293,7 @@ public class CreateNewEventActivity extends Activity implements OnClickListener 
 		        protected void onPostExecute(Boolean result) 
 		        {
 					((ProgressBar)findViewById(R.id.cne_progressBar)).setVisibility(View.GONE);
-					Toast.makeText(getBaseContext(),"SMSs sent successfully", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getBaseContext(),"Sent successfully", Toast.LENGTH_SHORT).show();
 		        }
 		}.execute(bundle);
 	}
@@ -296,10 +309,10 @@ public class CreateNewEventActivity extends Activity implements OnClickListener 
 		
 		@Override
 		protected Boolean doInBackground(Bundle... bundle) {
-			try {Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
+			//try {Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
 			Bundle mp = null;
 			String number = "";
-			String getSimNumber = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE)).getLine1Number();
+			//String getSimNumber = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE)).getLine1Number();
 			String message = "";
 			
 			if(bundle[0] != null) {
@@ -318,37 +331,52 @@ public class CreateNewEventActivity extends Activity implements OnClickListener 
 				    	{
 				    		mp = bundle[0].getBundle("Point");
 				    		Log.i("CreateNewActivity:313", "Got entry to be sent: "+ mp.keySet().toArray()[0].toString() + " "+mp.get(mp.keySet().toArray()[0].toString()).toString());
-				    		message += mp.keySet().toArray()[0].toString() + " " + mp.get(mp.keySet().toArray()[0].toString()).toString();
+				    		message += mp.keySet().toArray()[0].toString() + ": " + mp.get(mp.keySet().toArray()[0].toString()).toString();
 				    	}
 		    			else
 		    			{
-		    				message += layoutElement + ": " + bundle[0].get(layoutElement).toString() + "\n";
+		    				message += layoutElement + ": " + bundle[0].get(layoutElement).toString() + "%0A";
 		    				Log.i("CreateNewActivity:319", "Got entry to be sent: "+ layoutElement +": "+bundle[0].get(layoutElement).toString());
 		    			}
 			    	}
 		    	}
-		    }			
-			
-			Log.i("CreateNewEvent:273","Sending message");
-			Log.i("CreateNewEvent:273","Number: " + number);
-			Log.i("CreateNewEvent:274","Number: " + getSimNumber);
-			Log.i("CreateNewEvent:275",message);
-//			if (BIHAPI)
-//			{
-//				//if SMS
-//				SendSMS sendSMS = new SendSMS(number,getSimNumber,message);
-//				sendSMS.constructRequest();
-//				return sendSMS.send();
-//				//else if USSD
-//			}
-//			else
-//			{
-//				//send SMS using Android API
-//			}
-			
+		    }
+			message=message.replace(" ","%20");
+			message=message.replace(",","%2C");
+			message=message.replace(":","%3A");
+			message=message.replace(";","%3B");
+			message=message.replace("(","%28");
+			message=message.replace(")","%29");
+			message=message.replace("-","%2D");
+			message=message.replace("\n","%0A");
+			Log.i("CreateNewEvent:352","Sending message");
+			Log.i("CreateNewEvent:353","Number: " + number);
+			//Log.i("CreateNewEvent:274","Number: " + getSimNumber);
+			Log.i("CreateNewEvent:355",message);
+			if (BIHAPI)
+			{
+				if(((CheckBox)findViewById(R.id.cne_checkBoxSMS)).isChecked())
+				{
+					SendSMS sendSMS = new SendSMS(number,"48514168606",message);
+					sendSMS.send();
+				}
+				else if (((CheckBox)findViewById(R.id.cne_checkBoxUSSD)).isChecked())
+				{
+					SendUSSD sendUSSD = new SendUSSD(number,message);
+					sendUSSD.send();
+				}
+			}
+			else
+			{
+				//send SMS using Android API
+			}			
 			ReadWriteJSON.get().writeToFile(ReadWriteJSON.get().createJSON(bundle[0]),this.context);
 	    	return true;
 		}	
 	}
+	
+	public static Context getAppContext() {
+        return CreateNewEventActivity.context;
+    }
 }
 

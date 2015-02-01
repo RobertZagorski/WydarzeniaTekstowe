@@ -1,6 +1,10 @@
 package com.ute.bihapi.wydarzeniatekstowe.sendapis;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.ute.bihapi.wydarzeniatekstowe.httpRequest.HttpRequest;
 
@@ -27,13 +31,12 @@ public class SendSMS implements SendInterface {
 	            sentSuccessfully = true;
 	        }
 	    }.execute();
-	    while (this.sentSuccessfully == false) {}
 	    return this.sentSuccessfully;
 	}
 	
 	public String constructRequest()
 	{
-		adres = "https://api.bihapi.pl/sendsms/?from="+From
+		adres = "https://api.bihapi.pl/orange/oracle/sendsms/?from="+From
 												+"&to="+To
 												+"&msg="+MessageBody;
 		return adres;
@@ -42,8 +45,19 @@ public class SendSMS implements SendInterface {
 	class FetchData extends AsyncTask<Void, Integer, Boolean> {
 	    @Override
 	    protected Boolean doInBackground(Void... arg0) {
-	    	HttpRequest.get().execute( constructRequest() );
-	        return true;
+	    	Log.i("SendSMS:48","Sending SMS");
+	    	String response = HttpRequest.get().execute( constructRequest() );
+	    	try {
+				JSONObject resp = new JSONObject(response);
+				if (resp.getString("result").equals("OK"))
+					return true;
+				else
+					return false;
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
 	    }	
 	}
 }

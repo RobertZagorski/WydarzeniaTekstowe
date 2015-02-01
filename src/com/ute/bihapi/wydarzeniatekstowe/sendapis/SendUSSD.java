@@ -1,6 +1,10 @@
 package com.ute.bihapi.wydarzeniatekstowe.sendapis;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.ute.bihapi.wydarzeniatekstowe.httpRequest.HttpRequest;
 
@@ -20,27 +24,36 @@ public class SendUSSD implements SendInterface {
 	
 	@Override
 	public Boolean send() {
-		new FetchData() { 
+		AsyncTask<Void, Integer, Boolean> task = new FetchData() { 
 	        protected void onPostExecute(Boolean result) {
 	        	sentSuccessfully = true;
 	        }
 	    }.execute();
-	    while (this.sentSuccessfully == false) {}
 	    return this.sentSuccessfully;
 	}
 
 	@Override
 	public String constructRequest() {
-	   	adres = "https://api2.orange.pl/sendussd/?to="+this.To
-	   													+"&msg="+this.MessageBody;
+	   	adres = "https://api.bihapi.pl/orange/oracle/sendussd?msg="+this.MessageBody+"&to="+this.To;
 		return adres;
 	}
 
 	class FetchData extends AsyncTask<Void, Integer, Boolean> {
 	    @Override
 	    protected Boolean doInBackground(Void... arg0) {
-	    	HttpRequest.get().execute( constructRequest() );
-	        return true;
+	    	Log.i("SendUSSD:45","Sending USSD");
+	    	String response = HttpRequest.get().execute( constructRequest() );
+	    	try {
+				JSONObject resp = new JSONObject(response);
+				if (resp.getString("result").equals("OK"))
+					return true;
+				else
+					return false;
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
 	    }	
 	}
 }

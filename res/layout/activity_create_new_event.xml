@@ -1,0 +1,235 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/red_button"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/cne_activity_padding"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.ute.bihapi.wydarzeniatekstowe.secondScreenActivities.CreateNewEventActivity" >
+
+    <TextView
+        android:id="@+id/cne_text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/create_new_event_name"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:id="@+id/cne_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_text1"
+        android:layout_below="@+id/cne_text1"
+        android:layout_marginTop="15dp"
+        android:text="@string/create_new_event_date"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff" />
+
+    <EditText
+        android:id="@+id/cne_edit1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/cne_text2"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/cne_text4"
+        android:ems="10"
+        android:hint="@string/create_new_event_name_hint"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/font_size_edit" >
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/cne_edit2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cne_text2"
+        android:layout_alignLeft="@+id/cne_edit1"
+        android:layout_alignRight="@+id/cne_edit1"
+        android:ems="10"
+        android:hint="@string/create_new_event_date_hint"
+        android:inputType="date"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/font_size_edit" />
+
+    <TextView
+        android:id="@+id/cne_text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_text2"
+        android:layout_below="@+id/cne_text2"
+        android:layout_marginTop="15dp"
+        android:text="@string/create_new_event_hour"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:id="@+id/cne_text4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_text3"
+        android:layout_below="@+id/cne_text3"
+        android:layout_marginTop="15dp"
+        android:maxLength="80"
+        android:text="@string/create_new_event_include_text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff" />
+
+    <EditText
+        android:id="@+id/cne_edit4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_edit3"
+        android:layout_alignRight="@+id/cne_edit3"
+        android:layout_alignTop="@+id/cne_text4"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="@string/create_new_event_include_text_hint"
+        android:inputType="textMultiLine"
+        android:minLines="2"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/font_size_edit" />
+
+    <EditText
+        android:id="@+id/cne_edit3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cne_text3"
+        android:layout_alignLeft="@+id/cne_edit2"
+        android:layout_alignRight="@+id/cne_edit2"
+        android:ems="10"
+        android:hint="@string/create_new_event_hour_hint"
+        android:inputType="time"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/font_size_edit" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/cne_edit5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_edit4"
+        android:layout_alignRight="@+id/cne_edit4"
+        android:layout_below="@+id/cne_edit4"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:gravity="top|center_vertical"
+        android:hint="@string/create_new_event_people_hint"
+        android:minLines="2"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/font_size_edit" />
+
+    <Button
+        android:id="@+id/cne_button_place"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_text4"
+        android:layout_below="@+id/cne_edit5"
+        android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@+id/cne_edit5"
+        android:gravity="center_vertical|center_horizontal|start"
+        android:text="@string/create_new_event_place" />
+
+    <CheckBox
+        android:id="@+id/cne_checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_button_place"
+        android:layout_alignRight="@+id/cne_edit5"
+        android:layout_below="@+id/cne_button_place"
+        android:layout_marginTop="15dp"
+        android:text="@string/create_new_event_notification_question"
+        android:textColor="#ffffff" />
+
+<!-- android:visibility="gone" -->
+
+    <TextView
+        android:id="@+id/cne_text6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_checkBox"
+        android:layout_below="@+id/cne_checkBox"
+        android:layout_marginTop="15dp"
+        android:maxLength="80"
+        android:text="@string/create_new_event_when_to_send"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/cne_edit6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cne_text6"
+        android:layout_alignRight="@+id/cne_checkBox"
+        android:layout_toRightOf="@+id/cne_button_place"
+        android:ems="10"
+        android:hint="@string/create_new_event_when_to_send_hint"
+        android:inputType="time"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/font_size_edit"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/cne_includebutton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/cne_edit5"
+        android:layout_alignBottom="@+id/cne_edit5"
+        android:layout_alignLeft="@+id/cne_button_place"
+        android:layout_alignRight="@+id/cne_button_place"
+        android:text="@string/create_new_event_people" />
+
+    <TextView
+        android:id="@+id/cne_text7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/cne_button_place"
+        android:layout_alignBottom="@+id/cne_button_place"
+        android:layout_alignLeft="@+id/cne_edit5"
+        android:layout_alignRight="@+id/cne_edit5"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FFFFFF" />
+
+    <ProgressBar
+        android:id="@+id/cne_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cne_checkBox"
+        android:layout_toRightOf="@+id/cne_sendbutton"
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/cne_checkBoxSMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/cne_sendbutton"
+        android:layout_alignLeft="@+id/cne_checkBox"
+        android:text="@string/create_new_event_sms" />
+    
+    <CheckBox
+        android:id="@+id/cne_checkBoxUSSD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cne_checkBoxSMS"
+        android:layout_toRightOf="@+id/cne_button_place"
+        android:text="@string/create_new_event_ussd" />
+    
+    <Button
+        android:id="@+id/cne_sendbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cne_checkBox"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="14dp"
+        android:gravity="left|center_vertical|center_horizontal"
+        android:text="@string/create_new_event_save_and_send" />
+
+</RelativeLayout>

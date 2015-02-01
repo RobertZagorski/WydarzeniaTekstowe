@@ -80,7 +80,7 @@ public class GooglePlaces {
                     response.getEntity().writeTo(out);
                     out.close();
                     responseString = out.toString();
-                	//Log.i("GooglePlaces:94","Got Response: "+responseString);
+                	Log.i("GooglePlaces:83","Got Response: "+responseString);
                 } else {
                     //Closes the connection.
                     response.getEntity().getContent().close();

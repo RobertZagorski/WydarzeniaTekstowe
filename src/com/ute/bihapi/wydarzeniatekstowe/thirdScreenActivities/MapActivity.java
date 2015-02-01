@@ -106,10 +106,10 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
 	ListView listView;
 	
 	Bundle memory;
-	public String[] layoutElements = {"EventName",
+	public String[] layoutElements = {"Event",
 									  "Date",
 									  "Hour",
-									  "Include",
+									  "Message",
 									  "Person",
 									  "WhenToSend"};
 	
@@ -344,11 +344,6 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
 		mapSettings.setScrollGesturesEnabled(true);
 		googleMap.setOnMapLongClickListener (this);
 		googleMap.setOnCameraChangeListener(this);
-		/*Marker warsaw = googleMap.addMarker(new MarkerOptions()
-        											.position(WARSAW)
-        											.title("Warsaw")
-        											.snippet("city")
-        											.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));*/
 		googleMap.setOnMarkerClickListener(this);
 		googleMap.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() 
 		{
@@ -415,6 +410,7 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
     		 Log.i("Memory", "Sending entry to previous activity: "+entry +": "+memory.get(entry));
     	 }
     	 intent.putExtra("Point", point);
+    	 intent.putExtra("PointName", place);
     	 NavUtils.navigateUpTo(MapActivity.this, intent);
 	}
 

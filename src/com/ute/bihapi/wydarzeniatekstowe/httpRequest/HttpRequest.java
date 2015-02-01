@@ -23,6 +23,8 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.util.Log;
+
 /**
  * Klasa bazowa s³u¿¹ca do wysy³ania HTTP Get Request do serwera
  * otrzymuje gotowy ju¿ link i zwraca odpowiedŸ.
@@ -37,12 +39,12 @@ public class HttpRequest implements HttpRequestInterface {
 	
 	private HttpRequest()
 	{
-		targetHost = new HttpHost("api2.orange.pl", 443, "https");
+		targetHost = new HttpHost("api.bihapi.pl", 443, "https");
      	client = new DefaultHttpClient();  
+     	Log.i("HttpREquest:42","Got connection");
      	client.getCredentialsProvider().setCredentials(new AuthScope(	targetHost.getHostName(), 
      			 														targetHost.getPort()), 
-     			 														new UsernamePasswordCredentials("48789101781", 
-     			 																						"TSS7C347ENHMLE"));
+     			 														new UsernamePasswordCredentials("48514168606", "CqXWAJHmpmqL7m9xk9"));
 	}
 	
 	private static class HttpRequestHolder { 
@@ -58,15 +60,18 @@ public class HttpRequest implements HttpRequestInterface {
 		try {
 	      	 sslClient(client);
 	      	 HttpGet httpget = new HttpGet(HTTPLink);
-	      	 response = client.execute( httpget);
+	      	 Log.i("HttpRequest:64","Sending to: "+HTTPLink);
+	      	 response = client.execute(httpget);
 	       	 
 	   	}catch (Exception e) {
 	   		System.out.println("!!!!!"+e);
 	   	}
 		int responseCode = response.getStatusLine().getStatusCode();
+		Log.i("ResponseCode",response.getStatusLine().toString());
 		switch(responseCode)
 		{
 		    case 200:
+		    {
 		        HttpEntity entity = response.getEntity();
 		        if(entity != null)
 		        {
@@ -80,12 +85,17 @@ public class HttpRequest implements HttpRequestInterface {
 					}
 		        	return responseBody;
 		        }
+		    }
+		    case 400:
+		    {
+		    	Log.i("ResponseCode 400","Nie mo¿na wys³aæ wiadomoœci. Kod b³êdu HTTP: 400");
+		    }
 		///Dodaæ wiêcej responseCode - obs³uga b³êdów przy nieprawid³owoœciach
 		} 
 	   	return null;
 	}
 	
-	private void sslClient(HttpClient client) {
+	private void sslClient(HttpClient client) {       
         try {
             X509TrustManager tm = new X509TrustManager() { 
                 public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
